@@ -47,80 +47,6 @@ void drawCells(Cell *cell){
   }
 }
 
-void copyData(int originalIndex, int targetIndex, Cell *cellArr){
-  cellArr[targetIndex].direction = cellArr[originalIndex].direction;
-  cellArr[targetIndex].type = cellArr[originalIndex].type;
-  cellArr[targetIndex].active = true;
-  cellArr[targetIndex].colour = cellArr[originalIndex].colour;
-  cellArr[targetIndex].element = cellArr[originalIndex].element;
-}
-
-void deactivateCell(int originalIndex, Cell *cellArr){
-  cellArr[originalIndex].direction = 0;
-  cellArr[originalIndex].type = EMPTY;
-  cellArr[originalIndex].element = NOTHING;
-  cellArr[originalIndex].active = false;
-}
-
-void moveDown(int originalIndex, int targetIndex, Cell *cellArr){
-  if(cellArr[targetIndex].type == EMPTY){
-    copyData(originalIndex, targetIndex, cellArr);
-    deactivateCell(originalIndex, cellArr);
-  }
-}
-
-void moveDownRight(int originalIndex, int targetIndex, Cell *cellArr){
-  if(cellArr[targetIndex].type == EMPTY){
-    copyData(originalIndex, targetIndex, cellArr);
-    deactivateCell(originalIndex, cellArr);
-  }
-}
-
-void moveDownLeft(int originalIndex, int targetIndex, Cell *cellArr){
-  if(cellArr[targetIndex].type == EMPTY){
-    copyData(originalIndex, targetIndex, cellArr);
-    deactivateCell(originalIndex, cellArr);
-  }
-}
-
-void moveRight(int originalIndex, int targetIndex, Cell *cellArr){
-  if(cellArr[targetIndex].type == EMPTY && cellArr[originalIndex].direction > 0){
-    copyData(originalIndex, targetIndex, cellArr);
-    cellArr[targetIndex].moved = true;
-    deactivateCell(originalIndex, cellArr);
-    cellArr[originalIndex].moved = false;
-  }  
-  //flipping the direction
-  if(cellArr[targetIndex].type != EMPTY){
-    cellArr[originalIndex].direction *= -1;
-  }
-}
-
-void moveLeft(int originalIndex, int targetIndex, Cell *cellArr){
-  if(cellArr[targetIndex].type == EMPTY && cellArr[originalIndex].direction < 0){
-    copyData(originalIndex, targetIndex, cellArr);
-    cellArr[targetIndex].moved = true;
-    deactivateCell(originalIndex, cellArr);
-    cellArr[originalIndex].moved = false;
-  }  
-  //flip the direction 
-  if(cellArr[targetIndex].type != EMPTY){
-    cellArr[originalIndex].direction *= -1;
-  }
-}
-
-void moveUp(int originalIndex, int targetIndex, Cell *cellArr){
-  if(cellArr[targetIndex].type == EMPTY && cellArr[originalIndex].direction == 0){
-    copyData(originalIndex, targetIndex, cellArr);
-    cellArr[targetIndex].moved = true;
-    deactivateCell(originalIndex, cellArr);
-  }
-}
-
-void changeDirectionRandomly(Cell *cell){
-  cell->direction = GetRandomValue(-1, 1);
-}
-
 
 void clearMoved(Cell *cellArr){
   for(int i = 0; i < AMOUNT_OF_CELLS; i++){
@@ -133,26 +59,24 @@ void moveCells(Cell *cellArr){
   clearMoved(cellArr);
   for(int i = AMOUNT_OF_CELLS - 1; i >= 0; i--){
     if(cellArr[i].active && !cellArr[i].moved){
-      int targetIndex = i + GRID_WIDTH; 
-      if(targetIndex < AMOUNT_OF_CELLS){
+      int belowIndex = i + GRID_WIDTH; 
+      int aboveIndex = i - GRID_WIDTH;
+      if(belowIndex < AMOUNT_OF_CELLS){
         switch(cellArr[i].type){
           case SAND:
-            moveDown(i, targetIndex, cellArr);
-            moveDownRight(i, targetIndex + 1, cellArr);
-            moveDownLeft(i, targetIndex - 1, cellArr);
+            moveDown(i, belowIndex, cellArr);
+            moveDownRight(i, belowIndex + 1, cellArr);
+            moveDownLeft(i, belowIndex - 1, cellArr);
             break;
           case WATER:
-            moveDown(i, targetIndex, cellArr);
+            moveDown(i, belowIndex, cellArr);
             moveRight(i, i + 1, cellArr);
             moveLeft(i, i - 1, cellArr);
             break;
-          case STONE:
-            break;
           case SMOKE:
-            targetIndex = i - GRID_WIDTH;
-            if(targetIndex >= 0){
+            if(aboveIndex >= 0){
               changeDirectionRandomly(&cellArr[i]);
-              moveUp(i, targetIndex, cellArr);
+              moveUp(i, aboveIndex, cellArr);
               moveLeft(i, i - 1, cellArr);
               moveRight(i, i + 1, cellArr);
               break;
