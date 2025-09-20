@@ -10,6 +10,6 @@
   void moveLeft(int originalIndex, int targetIndex, Cell *cellArr);
   void moveUp(int originalIndex, int targetIndex, Cell *cellArr);
   void changeDirectionRandomly(Cell *cell);
-  void sink(int originalIndex, int targetIndex, Cell *cellArr);
+  void consume(int originalIndex, int targetIndex, Cell *cellArr);
 
 #endif

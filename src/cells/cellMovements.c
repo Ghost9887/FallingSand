@@ -13,7 +13,6 @@ void switchType(int originalIndex, CellType type, Cell *cellArr){
   switch(type){
     case WET_SAND:
       cellArr[originalIndex].type = WET_SAND;
-      cellArr[originalIndex].behaviour = NEUTRAL;
       cellArr[originalIndex].density = 2.0f;
       break;
   } 
@@ -32,7 +31,6 @@ void replaceCell(int originalIndex, int targetIndex, Cell *cellArr){
   cellArr[targetIndex].direction = cellArr[originalIndex].direction;
   cellArr[targetIndex].type = cellArr[originalIndex].type;
   cellArr[targetIndex].element = cellArr[originalIndex].element;
-  cellArr[targetIndex].behaviour = cellArr[originalIndex].behaviour;
   cellArr[targetIndex].density = cellArr[originalIndex].density;
   cellArr[targetIndex].active = true;
   deactivateCell(originalIndex, cellArr);
@@ -44,14 +42,12 @@ void switchCells(int originalIndex, int targetIndex, Cell *cellArr){
   cellArr[targetIndex].direction = cellArr[originalIndex].direction;
   cellArr[targetIndex].type = cellArr[originalIndex].type;
   cellArr[targetIndex].element = cellArr[originalIndex].element;
-  cellArr[targetIndex].behaviour = cellArr[originalIndex].behaviour;
   cellArr[targetIndex].density = cellArr[originalIndex].density;
   cellArr[targetIndex].active = true;
 
   cellArr[originalIndex].direction = tempCell.direction;
   cellArr[originalIndex].type = tempCell.type;
   cellArr[originalIndex].element = tempCell.element;
-  cellArr[originalIndex].behaviour = tempCell.behaviour;
   cellArr[originalIndex].density = tempCell.density;
   cellArr[originalIndex].active = true;
 }
@@ -97,63 +93,43 @@ void moveUp(int originalIndex, int targetIndex, Cell *cellArr){
   }
 }
 
-//TODO: refactor this right now gets called twice(one for bottom - one for top)
-void sink(int originalIndex, int targetIndex, Cell *cellArr){
+void consume(int originalIndex, int targetIndex, Cell *cellArr){
   if(cellArr[targetIndex].element == LIQUID && cellArr[originalIndex].density > cellArr[targetIndex].density){
-    //check the behaviour of the cell to determine what to do with it
-    if(cellArr[originalIndex].behaviour == NEUTRAL){
-      //switch cells
-      switchCells(originalIndex, targetIndex, cellArr);   
-    }
-    else if(cellArr[originalIndex].behaviour == CONSUME){
-      //replace the cell
-      replaceCell(originalIndex, targetIndex, cellArr);
-      //change the type
-      switch(cellArr[targetIndex].type){
-        case SAND:
-          switchType(targetIndex, WET_SAND, cellArr);
-          break;
-        default:
-          break;
-      }
+    //replace the cell
+    replaceCell(originalIndex, targetIndex, cellArr);
+    //change the type
+    switch(cellArr[targetIndex].type){
+      case SAND:
+        switchType(targetIndex, WET_SAND, cellArr);
+        break;
+      default:
+        break;
     }
   }
+  
   else if(cellArr[targetIndex + 1].element == LIQUID && cellArr[originalIndex].density > cellArr[targetIndex + 1].density){
-    //check the behaviour of the cell to determine what to do with it
-    if(cellArr[originalIndex].behaviour == NEUTRAL){
-      //switch cells
-      switchCells(originalIndex, targetIndex + 1, cellArr);   
-    }
-    else if(cellArr[originalIndex].behaviour == CONSUME){
-      //replace the cell
-      replaceCell(originalIndex, targetIndex + 1, cellArr);
-      //change the type
-      switch(cellArr[targetIndex + 1].type){
-        case SAND:
-          switchType(targetIndex + 1, WET_SAND, cellArr);
-          break;
-        default:
-          break;
-      }
+    //replace the cell
+    replaceCell(originalIndex, targetIndex + 1, cellArr);
+    //change the type
+    switch(cellArr[targetIndex + 1].type){
+      case SAND:
+        switchType(targetIndex + 1, WET_SAND, cellArr);
+        break;
+      default:
+        break;
     }
   }
+  
   else if(cellArr[targetIndex - 1].element == LIQUID && cellArr[originalIndex].density > cellArr[targetIndex - 1].density){
-    //check the behaviour of the cell to determine what to do with it
-    if(cellArr[originalIndex].behaviour == NEUTRAL){
-      //switch cells
-      switchCells(originalIndex, targetIndex - 1, cellArr);   
-    }
-    else if(cellArr[originalIndex].behaviour == CONSUME){
-      //replace the cell
-      replaceCell(originalIndex, targetIndex - 1, cellArr);
+    //replace the cell
+    replaceCell(originalIndex, targetIndex - 1, cellArr);
       //change the type
-      switch(cellArr[targetIndex - 1].type){
-        case SAND:
-          switchType(targetIndex - 1, WET_SAND, cellArr);
-          break;
-        default:
-          break;
-      }
+    switch(cellArr[targetIndex - 1].type){
+      case SAND:
+        switchType(targetIndex - 1, WET_SAND, cellArr);
+        break;
+      default:
+        break;
     }
   }
 }

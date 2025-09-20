@@ -67,15 +67,14 @@ void moveCells(Cell *cellArr){
         switch(cellArr[i].type){
           case SAND:
             //checks underneath
-            sink(i, belowIndex, cellArr);
+            consume(i, belowIndex, cellArr);
             //check above
-            sink(i, aboveIndex, cellArr);
+            consume(i, aboveIndex, cellArr);
             moveDown(i, belowIndex, cellArr);
             moveDownRight(i, belowIndex + 1, cellArr);
             moveDownLeft(i, belowIndex - 1, cellArr);
             break;
           case WET_SAND:
-            sink(i, belowIndex, cellArr);
             moveDown(i, belowIndex, cellArr);
             moveDownRight(i, belowIndex + 1, cellArr);
             moveDownLeft(i, belowIndex - 1, cellArr);

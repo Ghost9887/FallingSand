@@ -32,17 +32,11 @@ typedef enum ElementType{
   SOLID
 }ElementType;
 
-typedef enum Behaviour{
-  NEUTRAL,
-  CONSUME
-}Behaviour;
-
 typedef struct Cell{
   Vector2 pos;
   int direction;
   CellType type;
   ElementType element; 
-  Behaviour behaviour;
   float density;
   bool isSolid;
   bool moved;
