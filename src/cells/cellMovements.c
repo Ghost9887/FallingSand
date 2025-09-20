@@ -43,30 +43,33 @@ void switchCells(int originalIndex, int targetIndex, Cell *cellArr){
   cellArr[targetIndex].type = cellArr[originalIndex].type;
   cellArr[targetIndex].element = cellArr[originalIndex].element;
   cellArr[targetIndex].density = cellArr[originalIndex].density;
-  cellArr[targetIndex].active = true;
+  cellArr[targetIndex].active = cellArr[originalIndex].active;
 
   cellArr[originalIndex].direction = tempCell.direction;
   cellArr[originalIndex].type = tempCell.type;
   cellArr[originalIndex].element = tempCell.element;
   cellArr[originalIndex].density = tempCell.density;
-  cellArr[originalIndex].active = true;
+  cellArr[originalIndex].active = tempCell.active;
 }
 
 void moveDown(int originalIndex, int targetIndex, Cell *cellArr){
   if(cellArr[originalIndex].density > cellArr[targetIndex].density){
-    replaceCell(originalIndex, targetIndex, cellArr);
+    //replaceCell(originalIndex, targetIndex, cellArr);
+    switchCells(originalIndex, targetIndex, cellArr);
   }
 }
 
 void moveDownRight(int originalIndex, int targetIndex, Cell *cellArr){
   if(cellArr[originalIndex].density > cellArr[targetIndex].density){
-    replaceCell(originalIndex, targetIndex, cellArr);
+    //replaceCell(originalIndex, targetIndex, cellArr);
+    switchCells(originalIndex, targetIndex, cellArr);
   }
 }
 
 void moveDownLeft(int originalIndex, int targetIndex, Cell *cellArr){
   if(cellArr[originalIndex].density > cellArr[targetIndex].density){
-    replaceCell(originalIndex, targetIndex, cellArr);
+    //replaceCell(originalIndex, targetIndex, cellArr);
+    switchCells(originalIndex, targetIndex, cellArr);
   }
 }
 
