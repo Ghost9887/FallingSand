@@ -44,6 +44,9 @@ void drawCells(Cell *cell){
     case SMOKE:
       DrawRectangle(cell->pos.x, cell->pos.y, CELL_SIZE, CELL_SIZE, DARKGRAY);
       break;
+    case DIRT:
+      DrawRectangle(cell->pos.x, cell->pos.y, CELL_SIZE, CELL_SIZE, BROWN);
+      break;
    default:
       break;
   }
@@ -74,6 +77,11 @@ void moveCells(Cell *cellArr){
             moveDownRight(i, belowIndex + 1, cellArr);
             moveDownLeft(i, belowIndex - 1, cellArr);
             break;
+          //TODO: finsih the dirt rules (water should seep through dirt and exit not consume like sand) 
+            case DIRT:
+            moveDown(i, belowIndex, cellArr);
+            moveDownRight(i, belowIndex + 1, cellArr);
+            moveDownLeft(i, belowIndex - 1, cellArr);
           case WET_SAND:
             moveDown(i, belowIndex, cellArr);
             moveDownRight(i, belowIndex + 1, cellArr);

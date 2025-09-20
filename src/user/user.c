@@ -22,6 +22,9 @@ void switchTypes(User *user){
   else if(IsKeyPressed(KEY_FOUR)){
     user->equippedType = SMOKE;
   }
+  else if(IsKeyPressed(KEY_FIVE)){
+    user->equippedType = DIRT;
+  }
 }
 
 //TODO: issue when placing tiles doesnt work sometimes
@@ -51,6 +54,10 @@ void placeCell(User *user, Cell *cellArr){
       else if(user->equippedType == SMOKE){
         cellArr[indexOfCell].element = GAS;
         cellArr[indexOfCell].density = 0.0f;
+      }
+      else if(user->equippedType == DIRT){
+        cellArr[indexOfCell].element = SOLID;
+        cellArr[indexOfCell].density = 1.5f;
       }
       cellArr[indexOfCell].direction = (GetRandomValue(1, 2) % 2 == 0) ? -1 : 1;
       cellArr[indexOfCell].type = user->equippedType;

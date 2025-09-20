@@ -19,6 +19,10 @@ void drawUI(User *user, int fps){
     case SMOKE:
       DrawText("Smoke", SCREEN_WIDTH - 120, 20, 30,PURPLE);
       break;
+    case DIRT:
+      DrawText("Dirt", SCREEN_WIDTH - 120, 20, 30,PURPLE);
+      break;
+
     default:
       break;
   }

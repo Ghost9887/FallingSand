@@ -19,6 +19,7 @@
 typedef enum CellType{
   EMPTY,
   SAND,
+  DIRT,
   WET_SAND,
   WATER,
   SMOKE,
