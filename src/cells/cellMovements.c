@@ -97,8 +97,8 @@ void moveUp(int originalIndex, int targetIndex, Cell *cellArr){
   }
 }
 
+//TODO: refactor this right now gets called twice(one for bottom - one for top)
 void sink(int originalIndex, int targetIndex, Cell *cellArr){
-  //check bottom
   if(cellArr[targetIndex].element == LIQUID && cellArr[originalIndex].density > cellArr[targetIndex].density){
     //check the behaviour of the cell to determine what to do with it
     if(cellArr[originalIndex].behaviour == NEUTRAL){
@@ -118,7 +118,6 @@ void sink(int originalIndex, int targetIndex, Cell *cellArr){
       }
     }
   }
-  //chceck bottom right
   else if(cellArr[targetIndex + 1].element == LIQUID && cellArr[originalIndex].density > cellArr[targetIndex + 1].density){
     //check the behaviour of the cell to determine what to do with it
     if(cellArr[originalIndex].behaviour == NEUTRAL){
@@ -138,7 +137,6 @@ void sink(int originalIndex, int targetIndex, Cell *cellArr){
       }
     }
   }
-  //cehck bottom left
   else if(cellArr[targetIndex - 1].element == LIQUID && cellArr[originalIndex].density > cellArr[targetIndex - 1].density){
     //check the behaviour of the cell to determine what to do with it
     if(cellArr[originalIndex].behaviour == NEUTRAL){
