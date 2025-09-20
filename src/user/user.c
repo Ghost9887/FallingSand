@@ -36,21 +36,25 @@ void placeCell(User *user, Cell *cellArr){
 
     if(!cellArr[indexOfCell].active && user->equippedType != EMPTY){
       if(user->equippedType == SAND){
-        cellArr[indexOfCell].colour = YELLOW;
-        cellArr[indexOfCell].element = CONSUMABLE_SOLID;
+        cellArr[indexOfCell].element = SOLID;
+        cellArr[indexOfCell].behaviour = CONSUME;
+        cellArr[indexOfCell].density = 1.5f;
       }
       else if(user->equippedType == WATER){
-        cellArr[indexOfCell].colour = BLUE;
         cellArr[indexOfCell].element = LIQUID;
+        cellArr[indexOfCell].behaviour = NEUTRAL;
+        cellArr[indexOfCell].density = 1.0f;
       }
       else if(user->equippedType == STONE){
         cellArr[indexOfCell].isSolid = true;
-        cellArr[indexOfCell].colour = GRAY;
         cellArr[indexOfCell].element = SOLID;
+        cellArr[indexOfCell].behaviour = NEUTRAL;
+        cellArr[indexOfCell].density = 3.0f;
       }
       else if(user->equippedType == SMOKE){
-        cellArr[indexOfCell].colour = DARKGRAY;
         cellArr[indexOfCell].element = GAS;
+        cellArr[indexOfCell].behaviour = NEUTRAL;
+        cellArr[indexOfCell].density = 0.0f;
       }
       cellArr[indexOfCell].direction = (GetRandomValue(1, 2) % 2 == 0) ? -1 : 1;
       cellArr[indexOfCell].type = user->equippedType;

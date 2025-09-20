@@ -8,11 +8,10 @@ Cell createCell(int x, int y){
   cell.pos = (Vector2){ x, y };
   cell.direction = 0;
   cell.type = EMPTY;
-  cell.active = false;
+  cell.element = NOTHING;
+  cell.isSolid = false; // immovable
   cell.moved = false;
-  cell.isSolid = false;
-  cell.colour = BLACK;
-  cell.element = SOLID;
+  cell.active = false;
   return cell;
 }
 
@@ -31,16 +30,19 @@ void initCellArr(Cell *cellArr){
 void drawCells(Cell *cell){
   switch (cell->type) {
     case SAND:
-      DrawRectangle(cell->pos.x, cell->pos.y, CELL_SIZE, CELL_SIZE, cell->colour);
+      DrawRectangle(cell->pos.x, cell->pos.y, CELL_SIZE, CELL_SIZE, YELLOW);
       break;
-   case WATER:
-      DrawRectangle(cell->pos.x, cell->pos.y, CELL_SIZE, CELL_SIZE, cell->colour);
+    case WET_SAND:
+      DrawRectangle(cell->pos.x, cell->pos.y, CELL_SIZE, CELL_SIZE, GOLD);
+      break;
+    case WATER:
+      DrawRectangle(cell->pos.x, cell->pos.y, CELL_SIZE, CELL_SIZE, BLUE);
       break;
     case STONE:
-      DrawRectangle(cell->pos.x, cell->pos.y, CELL_SIZE, CELL_SIZE, cell->colour);
+      DrawRectangle(cell->pos.x, cell->pos.y, CELL_SIZE, CELL_SIZE, GRAY);
       break;
     case SMOKE:
-      DrawRectangle(cell->pos.x, cell->pos.y, CELL_SIZE, CELL_SIZE, cell->colour);
+      DrawRectangle(cell->pos.x, cell->pos.y, CELL_SIZE, CELL_SIZE, DARKGRAY);
       break;
    default:
       break;
@@ -64,10 +66,17 @@ void moveCells(Cell *cellArr){
       if(belowIndex < AMOUNT_OF_CELLS){
         switch(cellArr[i].type){
           case SAND:
+            sink(i, belowIndex, cellArr);
             moveDown(i, belowIndex, cellArr);
             moveDownRight(i, belowIndex + 1, cellArr);
             moveDownLeft(i, belowIndex - 1, cellArr);
             break;
+          case WET_SAND:
+            sink(i, belowIndex, cellArr);
+            moveDown(i, belowIndex, cellArr);
+            moveDownRight(i, belowIndex + 1, cellArr);
+            moveDownLeft(i, belowIndex - 1, cellArr);
+           break;
           case WATER:
             moveDown(i, belowIndex, cellArr);
             moveRight(i, i + 1, cellArr);

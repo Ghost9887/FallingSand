@@ -7,8 +7,8 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-#define SCREEN_WIDTH 1200
-#define SCREEN_HEIGHT 800
+#define SCREEN_WIDTH (GetScreenWidth()) 
+#define SCREEN_HEIGHT (GetScreenHeight())
 #define FPS 0
 
 #define CELL_SIZE 5 
@@ -19,6 +19,7 @@
 typedef enum CellType{
   EMPTY,
   SAND,
+  WET_SAND,
   WATER,
   SMOKE,
   STONE
@@ -28,19 +29,24 @@ typedef enum ElementType{
   NOTHING,
   GAS,
   LIQUID,
-  SOLID,
-  CONSUMABLE_SOLID,
+  SOLID
 }ElementType;
+
+typedef enum Behaviour{
+  NEUTRAL,
+  CONSUME
+}Behaviour;
 
 typedef struct Cell{
   Vector2 pos;
   int direction;
   CellType type;
   ElementType element; 
-  bool active;
-  bool moved;
+  Behaviour behaviour;
+  float density;
   bool isSolid;
-  Color colour;
+  bool moved;
+  bool active;
 }Cell;
 
 typedef struct User{
