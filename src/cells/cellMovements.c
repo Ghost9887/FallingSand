@@ -98,6 +98,7 @@ void moveUp(int originalIndex, int targetIndex, Cell *cellArr){
 }
 
 void sink(int originalIndex, int targetIndex, Cell *cellArr){
+  //check bottom
   if(cellArr[targetIndex].element == LIQUID && cellArr[originalIndex].density > cellArr[targetIndex].density){
     //check the behaviour of the cell to determine what to do with it
     if(cellArr[originalIndex].behaviour == NEUTRAL){
@@ -115,9 +116,47 @@ void sink(int originalIndex, int targetIndex, Cell *cellArr){
         default:
           break;
       }
-    
     }
-    
+  }
+  //chceck bottom right
+  else if(cellArr[targetIndex + 1].element == LIQUID && cellArr[originalIndex].density > cellArr[targetIndex + 1].density){
+    //check the behaviour of the cell to determine what to do with it
+    if(cellArr[originalIndex].behaviour == NEUTRAL){
+      //switch cells
+      switchCells(originalIndex, targetIndex + 1, cellArr);   
+    }
+    else if(cellArr[originalIndex].behaviour == CONSUME){
+      //replace the cell
+      replaceCell(originalIndex, targetIndex + 1, cellArr);
+      //change the type
+      switch(cellArr[targetIndex + 1].type){
+        case SAND:
+          switchType(targetIndex + 1, WET_SAND, cellArr);
+          break;
+        default:
+          break;
+      }
+    }
+  }
+  //cehck bottom left
+  else if(cellArr[targetIndex - 1].element == LIQUID && cellArr[originalIndex].density > cellArr[targetIndex - 1].density){
+    //check the behaviour of the cell to determine what to do with it
+    if(cellArr[originalIndex].behaviour == NEUTRAL){
+      //switch cells
+      switchCells(originalIndex, targetIndex - 1, cellArr);   
+    }
+    else if(cellArr[originalIndex].behaviour == CONSUME){
+      //replace the cell
+      replaceCell(originalIndex, targetIndex - 1, cellArr);
+      //change the type
+      switch(cellArr[targetIndex - 1].type){
+        case SAND:
+          switchType(targetIndex - 1, WET_SAND, cellArr);
+          break;
+        default:
+          break;
+      }
+    }
   }
 }
 

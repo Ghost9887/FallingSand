@@ -66,7 +66,10 @@ void moveCells(Cell *cellArr){
       if(belowIndex < AMOUNT_OF_CELLS){
         switch(cellArr[i].type){
           case SAND:
+            //checks underneath
             sink(i, belowIndex, cellArr);
+            //check above
+            sink(i, aboveIndex, cellArr);
             moveDown(i, belowIndex, cellArr);
             moveDownRight(i, belowIndex + 1, cellArr);
             moveDownLeft(i, belowIndex - 1, cellArr);
