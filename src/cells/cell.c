@@ -52,16 +52,8 @@ void drawCells(Cell *cell){
   }
 }
 
-
-void clearMoved(Cell *cellArr){
-  for(int i = 0; i < AMOUNT_OF_CELLS; i++){
-    cellArr[i].moved = false;
-  }
-}
-
 //have to go up so we dont cycle already moved cells
 void moveCells(Cell *cellArr){
-  clearMoved(cellArr);
   for(int i = AMOUNT_OF_CELLS - 1; i >= 0; i--){
     if(cellArr[i].active && !cellArr[i].moved){
       int belowIndex = i + GRID_WIDTH; 
@@ -112,6 +104,7 @@ void updateCells(Cell *cellArr){
   for(int i = 0; i < AMOUNT_OF_CELLS; i++){
     if(cellArr[i].active){
       drawCells(&cellArr[i]);
+      cellArr[i].moved = false;
     }
   }
   updateTimer += GetFrameTime();
