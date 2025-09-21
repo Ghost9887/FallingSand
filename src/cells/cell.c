@@ -1,6 +1,6 @@
 #include "cell.h"
 
-const float updateTime = 0.01f;
+const float updateTime = 0.005f;
 float updateTimer = 0.0f;
 
 Cell createCell(int x, int y){

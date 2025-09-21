@@ -11,10 +11,12 @@
 #define SCREEN_HEIGHT (GetScreenHeight())
 #define FPS 0
 
-#define CELL_SIZE 5 
+#define CELL_SIZE 2 
 #define GRID_WIDTH (SCREEN_WIDTH / CELL_SIZE)
 #define GRID_HEIGHT (SCREEN_HEIGHT / CELL_SIZE)
 #define AMOUNT_OF_CELLS (GRID_WIDTH * GRID_HEIGHT)
+
+#define BRUSH_RADIUS 1
 
 typedef enum CellType{
   EMPTY,

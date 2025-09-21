@@ -27,41 +27,49 @@ void switchTypes(User *user){
   }
 }
 
-//TODO: issue when placing tiles doesnt work sometimes
 void placeCell(User *user, Cell *cellArr){
   if(IsMouseButtonDown(MOUSE_BUTTON_LEFT)){
-
     Vector2 mousePos = GetMousePosition();
-    int posX = ((int)mousePos.x / CELL_SIZE) * CELL_SIZE;
-    int posY = ((int)mousePos.y / CELL_SIZE) * CELL_SIZE;
-
-    int indexOfCell = (posY / CELL_SIZE) * GRID_WIDTH + (posX / CELL_SIZE);
-
-    if(!cellArr[indexOfCell].active && user->equippedType != EMPTY){
-      if(user->equippedType == SAND){
-        cellArr[indexOfCell].element = SOLID;
-        cellArr[indexOfCell].density = 1.5f;
+    int centerX = (int)mousePos.x / CELL_SIZE;
+    int centerY = (int)mousePos.y / CELL_SIZE;
+    for(int offsetY = -BRUSH_RADIUS; offsetY <= BRUSH_RADIUS; offsetY++){
+      for(int offsetX = -BRUSH_RADIUS; offsetX <= BRUSH_RADIUS; offsetX++){
+        int gridX = centerX + offsetX;
+        int gridY = centerY + offsetY;
+        if(gridX < 0 || gridX >= GRID_WIDTH || gridY < 0 || gridY >= GRID_HEIGHT) continue;
+        int indexOfCell = gridY * GRID_WIDTH + gridX;
+        if(!cellArr[indexOfCell].active && user->equippedType != EMPTY){
+          Cell *cell = &cellArr[indexOfCell];
+          switch(user->equippedType){
+            case SAND:
+              cell->element = SOLID;
+              cell->density = 1.5f;
+              break;
+            case WATER:
+              cell->element = LIQUID;
+              cell->density = 1.0f;
+              break;
+            case STONE:
+              cell->isSolid = true;
+              cell->element = SOLID;
+              cell->density = 3.0f;
+              break;
+            case SMOKE:
+              cell->element = GAS;
+              cell->density = 0.0f;
+              break;
+            case DIRT:
+              cell->element = SOLID;
+              cell->density = 1.5f;
+              break;
+            default:
+              break;
+          }
+          cell->direction = (GetRandomValue(1, 2) % 2 == 0) ? -1 : 1;
+          cell->type = user->equippedType;
+          cell->active = true;
+        }
       }
-      else if(user->equippedType == WATER){
-        cellArr[indexOfCell].element = LIQUID;
-        cellArr[indexOfCell].density = 1.0f;
-      }
-      else if(user->equippedType == STONE){
-        cellArr[indexOfCell].isSolid = true;
-        cellArr[indexOfCell].element = SOLID;
-        cellArr[indexOfCell].density = 3.0f;
-      }
-      else if(user->equippedType == SMOKE){
-        cellArr[indexOfCell].element = GAS;
-        cellArr[indexOfCell].density = 0.0f;
-      }
-      else if(user->equippedType == DIRT){
-        cellArr[indexOfCell].element = SOLID;
-        cellArr[indexOfCell].density = 1.5f;
-      }
-      cellArr[indexOfCell].direction = (GetRandomValue(1, 2) % 2 == 0) ? -1 : 1;
-      cellArr[indexOfCell].type = user->equippedType;
-      cellArr[indexOfCell].active = true;
     }
   }
 }
