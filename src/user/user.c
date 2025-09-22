@@ -93,7 +93,7 @@ void placeCell(User *user, Cell *cellArr){
               cell->element = LIQUID;
               cell->density = 2.8f;
               cell->temp = 200.0f;
-              cell->vescocity = 4;
+              cell->vescocity = 8;
             default:
               break;
           }

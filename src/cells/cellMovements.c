@@ -44,6 +44,24 @@ void switchType(int originalIndex, CellType type, Cell *cellArr){
       cellArr[originalIndex].type = WATER_VAPOR;
       cellArr[originalIndex].temp = MAX_WATER_TEMP - 1;
       cellArr[originalIndex].density = 0.0f;
+      break;
+    case LAVA:
+      cellArr[originalIndex].element = LIQUID;
+      cellArr[originalIndex].type = LAVA;
+      cellArr[originalIndex].temp = 200.0f;
+      cellArr[originalIndex].density = 2.9f;
+      break;
+    case GLASS:
+      cellArr[originalIndex].type = GLASS;
+      cellArr[originalIndex].temp = 23.0f;
+      cellArr[originalIndex].density = 2.8f;
+      cellArr[originalIndex].isSolid = true;
+      break;
+    case VOLCANIC_GLASS:
+      cellArr[originalIndex].element = SOLID;
+      cellArr[originalIndex].type = VOLCANIC_GLASS;
+      cellArr[originalIndex].temp = 23.0f;
+      cellArr[originalIndex].density = 4.5f;
     default:
       break;
   } 
@@ -90,28 +108,28 @@ void switchCells(int originalIndex, int targetIndex, Cell *cellArr){
 }
 
 void moveDown(int originalIndex, int targetIndex, Cell *cellArr){
-  if(cellArr[originalIndex].density > cellArr[targetIndex].density){
+  if(cellArr[originalIndex].density > cellArr[targetIndex].density && !cellArr[targetIndex].isSolid){
     //replaceCell(originalIndex, targetIndex, cellArr);
     switchCells(originalIndex, targetIndex, cellArr);
   }
 }
 
 void moveDownRight(int originalIndex, int targetIndex, Cell *cellArr){
-  if(cellArr[originalIndex].density > cellArr[targetIndex].density){
+  if(cellArr[originalIndex].density > cellArr[targetIndex].density && !cellArr[targetIndex].isSolid){
     //replaceCell(originalIndex, targetIndex, cellArr);
     switchCells(originalIndex, targetIndex, cellArr);
   }
 }
 
 void moveDownLeft(int originalIndex, int targetIndex, Cell *cellArr){
-  if(cellArr[originalIndex].density > cellArr[targetIndex].density){
+  if(cellArr[originalIndex].density > cellArr[targetIndex].density && !cellArr[targetIndex].isSolid){
     //replaceCell(originalIndex, targetIndex, cellArr);
     switchCells(originalIndex, targetIndex, cellArr);
   }
 }
 
 void moveRight(int originalIndex, int targetIndex, Cell *cellArr){
-  if(cellArr[targetIndex].type == EMPTY && cellArr[originalIndex].direction > 0){
+  if(cellArr[targetIndex].type == EMPTY && cellArr[originalIndex].direction > 0 && !cellArr[targetIndex].isSolid){
     replaceCell(originalIndex, targetIndex, cellArr);
     cellArr[targetIndex].moved = true;
   }
@@ -119,7 +137,7 @@ void moveRight(int originalIndex, int targetIndex, Cell *cellArr){
 }
 
 void moveLeft(int originalIndex, int targetIndex, Cell *cellArr){
-  if(cellArr[targetIndex].type == EMPTY && cellArr[originalIndex].direction < 0){
+  if(cellArr[targetIndex].type == EMPTY && cellArr[originalIndex].direction < 0 && !cellArr[targetIndex].isSolid){
     replaceCell(originalIndex, targetIndex, cellArr);
     cellArr[targetIndex].moved = true;
   }  
@@ -134,6 +152,7 @@ void moveUp(int originalIndex, int targetIndex, Cell *cellArr){
 }
 
 void consume(int originalIndex, int targetIndex, Cell *cellArr){
+  //drinks the water for example
   if(cellArr[targetIndex].element == LIQUID && cellArr[originalIndex].density > cellArr[targetIndex].density){
     //replace the cell
     replaceCell(originalIndex, targetIndex, cellArr);
@@ -181,16 +200,56 @@ void consume(int originalIndex, int targetIndex, Cell *cellArr){
   }
 }
 
+bool destroyCell(int originalIndex, int targetIndex, Cell *cellArr){
+  if(cellArr[originalIndex].element == LIQUID){
+    if(cellArr[targetIndex].type == WOOD){
+      cellArr[targetIndex].temp += 10.0f;
+      return true;
+    }
+    else if(cellArr[targetIndex].type == STONE){
+      cellArr[targetIndex].temp += 10.0f;
+      return true;
+    }
+    else if(cellArr[targetIndex].type == SAND){
+      cellArr[targetIndex].temp += 10.0f;
+      return true;
+    }
+    else if(cellArr[targetIndex].type == WATER){
+      cellArr[targetIndex].temp += 90.0f;
+      cellArr[originalIndex].temp -= 50.0f;
+
+      if(cellArr[targetIndex + 1].type == WATER){
+        cellArr[targetIndex].temp += 90.0f;
+        cellArr[originalIndex].temp -= 50.0f;
+      }
+      if(cellArr[targetIndex - 1].type == WATER){
+        cellArr[targetIndex].temp += 90.0f;
+        cellArr[originalIndex].temp -= 50.0f;
+      }
+      if(cellArr[targetIndex - GRID_WIDTH].type == WATER){
+        cellArr[targetIndex].temp += 90.0f;
+        cellArr[originalIndex].temp -= 50.0f;
+      }
+      return true;
+    }
+    else if(cellArr[targetIndex].type == WET_SAND){
+      cellArr[targetIndex].temp += 50.0f;
+    }
+  }
+  return false;
+}
+
 void tempChange(int originalIndex, Cell *cellArr){
   if(cellArr[originalIndex].element == GAS){
-    cellArr[originalIndex].temp -= worldTemp / 1000;
+    cellArr[originalIndex].temp -= worldTemp / 10000;
     if(cellArr[originalIndex].type == WATER_VAPOR && cellArr[originalIndex].temp <= 0.0f){
       switchType(originalIndex, WATER, cellArr);
     }
   }
+
   else if(cellArr[originalIndex].element == SOLID){
     if(cellArr[originalIndex].type == WET_SAND){
-      cellArr[originalIndex].temp += worldTemp / 1000;
+      cellArr[originalIndex].temp += worldTemp / 10000;
       if(cellArr[originalIndex].temp >= MAX_WATER_TEMP){
         switchType(originalIndex, SAND, cellArr);
       }
@@ -201,12 +260,33 @@ void tempChange(int originalIndex, Cell *cellArr){
         switchType(originalIndex, DIRT, cellArr);
       }
     }
+    else if(cellArr[originalIndex].type == WOOD){
+      if(cellArr[originalIndex].temp >= MELTING_POINT_OF_WOOD){
+        switchType(originalIndex, LAVA, cellArr);
+      }
+    }
+    else if(cellArr[originalIndex].type == STONE){
+      if(cellArr[originalIndex].temp >= MELTING_POINT_OF_STONE){
+        switchType(originalIndex, LAVA, cellArr);
+      }
+    }
+    else if(cellArr[originalIndex].type == SAND){
+      if(cellArr[originalIndex].temp >= MELTING_POINT_OF_SAND){
+        switchType(originalIndex, GLASS, cellArr);
+      }
+    }
   }
+
   else if(cellArr[originalIndex].element == LIQUID){
     if(cellArr[originalIndex].type == WATER){
-      cellArr[originalIndex].temp += worldTemp / 1000;
+      cellArr[originalIndex].temp += worldTemp / 10000;
       if(cellArr[originalIndex].temp >= MAX_WATER_TEMP){
         switchType(originalIndex, WATER_VAPOR, cellArr);
+      }
+    }
+    else if(cellArr[originalIndex].type == LAVA){
+      if(cellArr[originalIndex].temp <= 10.0f){
+        switchType(originalIndex, VOLCANIC_GLASS, cellArr);
       }
     }
   }

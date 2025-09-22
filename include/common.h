@@ -19,11 +19,16 @@
 #define BRUSH_RADIUS 1
 
 #define MAX_WATER_TEMP 100
+#define MELTING_POINT_OF_WOOD 1000 //not accurate
+#define MELTING_POINT_OF_STONE 1300
+#define MELTING_POINT_OF_SAND 1700
 
 typedef enum CellType{
   EMPTY,
   SAND,
   WET_SAND,
+  GLASS,
+  VOLCANIC_GLASS,
   DIRT,
   WET_DIRT,
   WATER,

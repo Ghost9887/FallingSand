@@ -82,6 +82,12 @@ void drawCellInfo(Cell *cellArr){
     case LAVA:
       DrawText("Type: Lava", 20, 80, 20, PURPLE);
       break;
+    case GLASS:
+      DrawText("Type: Glass", 20, 80, 20, PURPLE);
+      break;
+    case VOLCANIC_GLASS:
+      DrawText("Type: Volcanic Glass", 20, 80, 20, PURPLE);
+      break;
     default:
       break;
   }

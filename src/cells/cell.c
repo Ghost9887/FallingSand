@@ -61,6 +61,12 @@ void drawCells(Cell *cell){
     case LAVA:
       DrawRectangle(cell->pos.x, cell->pos.y, CELL_SIZE, CELL_SIZE, ORANGE); 
       break;
+    case GLASS:
+      DrawRectangle(cell->pos.x, cell->pos.y, CELL_SIZE, CELL_SIZE, WHITE); 
+      break;
+    case VOLCANIC_GLASS:
+      DrawRectangle(cell->pos.x, cell->pos.y, CELL_SIZE, CELL_SIZE, PURPLE); 
+      break;
    default:
       break;
   }
@@ -75,6 +81,7 @@ void moveCells(Cell *cellArr){
       if(belowIndex < AMOUNT_OF_CELLS){
         switch(cellArr[i].type){
           case SAND:
+            tempChange(i, cellArr);
             consume(i, belowIndex, cellArr);
             consume(i, aboveIndex, cellArr);
             moveDown(i, belowIndex, cellArr);
@@ -109,11 +116,16 @@ void moveCells(Cell *cellArr){
             }
             break;
           case LAVA:
+            tempChange(i, cellArr);
             if(updateCounter % cellArr[i].vescocity == 0){
+              if(destroyCell(i, belowIndex, cellArr)) break;
               moveDown(i, belowIndex, cellArr);
               moveRight(i, i + 1, cellArr);
               moveLeft(i, i - 1, cellArr);
             }
+            break;
+          case VOLCANIC_GLASS:
+            moveDown(i, belowIndex, cellArr);
             break;
           case SMOKE:
             if(aboveIndex >= 0){
@@ -131,6 +143,12 @@ void moveCells(Cell *cellArr){
               moveLeft(i, i - 1, cellArr);
               moveRight(i, i + 1, cellArr);
             }
+            break;
+          case WOOD:
+            tempChange(i, cellArr);
+            break;
+          case STONE:
+            tempChange(i, cellArr);
             break;
           default:
             break;
