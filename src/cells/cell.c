@@ -1,6 +1,6 @@
 #include "cell.h"
 
-const float updateTime = 0.005f;
+const float updateTime = 0.001f;
 float updateTimer = 0.0f;
 
 Cell createCell(int x, int y){
@@ -47,6 +47,9 @@ void drawCells(Cell *cell){
     case DIRT:
       DrawRectangle(cell->pos.x, cell->pos.y, CELL_SIZE, CELL_SIZE, BROWN);
       break;
+    case WET_DIRT:
+      DrawRectangle(cell->pos.x, cell->pos.y, CELL_SIZE, CELL_SIZE, DARKBROWN);
+      break;
    default:
       break;
   }
@@ -69,12 +72,18 @@ void moveCells(Cell *cellArr){
             moveDownRight(i, belowIndex + 1, cellArr);
             moveDownLeft(i, belowIndex - 1, cellArr);
             break;
-          //TODO: finsih the dirt rules (water should seep through dirt and exit not consume like sand) 
-            case DIRT:
+          case WET_SAND:
             moveDown(i, belowIndex, cellArr);
             moveDownRight(i, belowIndex + 1, cellArr);
             moveDownLeft(i, belowIndex - 1, cellArr);
-          case WET_SAND:
+           break;
+          case DIRT:
+            consume(i, belowIndex, cellArr);
+            consume(i, aboveIndex, cellArr);
+            moveDown(i, belowIndex, cellArr);
+            moveDownRight(i, belowIndex + 1, cellArr);
+            moveDownLeft(i, belowIndex - 1, cellArr);
+          case WET_DIRT:
             moveDown(i, belowIndex, cellArr);
             moveDownRight(i, belowIndex + 1, cellArr);
             moveDownLeft(i, belowIndex - 1, cellArr);

@@ -15,8 +15,13 @@ void switchType(int originalIndex, CellType type, Cell *cellArr){
       cellArr[originalIndex].type = WET_SAND;
       cellArr[originalIndex].density = 2.0f;
       break;
+    case WET_DIRT:
+      cellArr[originalIndex].type = WET_DIRT;
+      cellArr[originalIndex].density = 2.0f;
+      break;
+    default:
+      break;
   } 
-
 }
 
 void deactivateCell(int originalIndex, Cell *cellArr){
@@ -105,11 +110,13 @@ void consume(int originalIndex, int targetIndex, Cell *cellArr){
       case SAND:
         switchType(targetIndex, WET_SAND, cellArr);
         break;
+      case DIRT:
+        switchType(targetIndex, WET_DIRT, cellArr);
+        break;
       default:
         break;
     }
   }
-  
   else if(cellArr[targetIndex + 1].element == LIQUID && cellArr[originalIndex].density > cellArr[targetIndex + 1].density){
     //replace the cell
     replaceCell(originalIndex, targetIndex + 1, cellArr);
@@ -118,11 +125,13 @@ void consume(int originalIndex, int targetIndex, Cell *cellArr){
       case SAND:
         switchType(targetIndex + 1, WET_SAND, cellArr);
         break;
+      case DIRT:
+        switchType(targetIndex + 1, WET_DIRT, cellArr);
+        break;
       default:
         break;
     }
   }
-  
   else if(cellArr[targetIndex - 1].element == LIQUID && cellArr[originalIndex].density > cellArr[targetIndex - 1].density){
     //replace the cell
     replaceCell(originalIndex, targetIndex - 1, cellArr);
@@ -130,6 +139,9 @@ void consume(int originalIndex, int targetIndex, Cell *cellArr){
     switch(cellArr[targetIndex - 1].type){
       case SAND:
         switchType(targetIndex - 1, WET_SAND, cellArr);
+        break;
+      case DIRT:
+        switchType(targetIndex - 1, WET_DIRT, cellArr);
         break;
       default:
         break;
