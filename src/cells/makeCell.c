@@ -131,7 +131,7 @@ void createLava(Cell *cell){
   cell->temp = 1000.0f;
   cell->isSolid = false;
   cell->moved = false;
-  cell->vescocity = 5;
+  cell->vescocity = 3;
   cell->direction = (GetRandomValue(1, 2) % 2 == 0) ? -1 : 1;
   cell->active = true;
 }
