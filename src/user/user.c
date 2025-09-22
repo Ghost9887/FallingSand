@@ -50,56 +50,34 @@ void placeCell(User *user, Cell *cellArr){
         if(gridX < 0 || gridX >= GRID_WIDTH || gridY < 0 || gridY >= GRID_HEIGHT) continue;
         int indexOfCell = gridY * GRID_WIDTH + gridX;
         if(!cellArr[indexOfCell].active && user->equippedType != EMPTY){
-          Cell *cell = &cellArr[indexOfCell];
           switch(user->equippedType){
             case SAND:
-              cell->element = SOLID;
-              cell->density = 1.5f;
-              cell->temp = worldTemp; 
+              createSand(&cellArr[indexOfCell]);
               break;
             case WATER:
-              cell->element = LIQUID;
-              cell->density = 1.0f;
-              cell->temp = worldTemp;
-              cell->vescocity = 1;
+              createWater(&cellArr[indexOfCell]);
               break;
             case STONE:
-              cell->isSolid = true;
-              cell->element = SOLID;
-              cell->density = 3.0f;
-              cell->temp = worldTemp;
+              createStone(&cellArr[indexOfCell]);
               break;
             case SMOKE:
-              cell->element = GAS;
-              cell->density = 0.0f;
-              cell->temp = worldTemp;
+              createSmoke(&cellArr[indexOfCell]);
               break;
             case WATER_VAPOR:
-              cell->element = GAS;
-              cell->density = 0.0f;
-              cell->temp = MAX_WATER_TEMP - 1;
+              createWaterVapor(&cellArr[indexOfCell]);
               break;
             case DIRT:
-              cell->element = SOLID;
-              cell->density = 1.5f;
-              cell->temp = worldTemp;
+              createDirt(&cellArr[indexOfCell]);
               break;
             case WOOD:
-              cell->element = SOLID;
-              cell->density = 1.6f;
-              cell->temp = worldTemp;
+              createWood(&cellArr[indexOfCell]);
               break;
             case LAVA:
-              cell->element = LIQUID;
-              cell->density = 2.8f;
-              cell->temp = 200.0f;
-              cell->vescocity = 8;
-            default:
+              createLava(&cellArr[indexOfCell]);
+              break;
+              default:
               break;
           }
-          cell->direction = (GetRandomValue(1, 2) % 2 == 0) ? -1 : 1;
-          cell->type = user->equippedType;
-          cell->active = true;
         }
       }
     }

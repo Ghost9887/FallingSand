@@ -1,21 +1,8 @@
 #include "cell.h"
 
-const float updateTime = 0.001f;
+const float updateTime = 0.01f;
 float updateTimer = 0.0f;
 int updateCounter = 3;
-
-Cell createCell(int x, int y){
-  Cell cell;
-  cell.pos = (Vector2){ x, y };
-  cell.direction = 0;
-  cell.type = EMPTY;
-  cell.element = NOTHING;
-  cell.isSolid = false; // immovable
-  cell.moved = false;
-  cell.active = false;
-  cell.vescocity = 1.0f;
-  return cell;
-}
 
 void initCellArr(Cell *cellArr){
   int index = 0;
@@ -23,7 +10,7 @@ void initCellArr(Cell *cellArr){
     for(int x = 0; x < GRID_WIDTH; x++){
       int posX = x * CELL_SIZE;
       int posY = y * CELL_SIZE;
-      cellArr[index] = createCell(posX, posY);
+      cellArr[index] = createEmptyCell(posX, posY);
       index++;
     }
   }
@@ -81,44 +68,34 @@ void moveCells(Cell *cellArr){
       if(belowIndex < AMOUNT_OF_CELLS){
         switch(cellArr[i].type){
           case SAND:
-            tempChange(i, cellArr);
-            consume(i, belowIndex, cellArr);
-            consume(i, aboveIndex, cellArr);
             moveDown(i, belowIndex, cellArr);
             moveDownRight(i, belowIndex + 1, cellArr);
             moveDownLeft(i, belowIndex - 1, cellArr);
             break;
           case WET_SAND:
-            tempChange(i, cellArr);
             moveDown(i, belowIndex, cellArr);
             moveDownRight(i, belowIndex + 1, cellArr);
             moveDownLeft(i, belowIndex - 1, cellArr);
            break;
           case DIRT:
-            consume(i, belowIndex, cellArr);
-            consume(i, aboveIndex, cellArr);
             moveDown(i, belowIndex, cellArr);
             moveDownRight(i, belowIndex + 1, cellArr);
             moveDownLeft(i, belowIndex - 1, cellArr);
             break;
           case WET_DIRT:
-            tempChange(i, cellArr);
             moveDown(i, belowIndex, cellArr);
             moveDownRight(i, belowIndex + 1, cellArr);
             moveDownLeft(i, belowIndex - 1, cellArr);
            break;
           case WATER:
             if(updateCounter % cellArr[i].vescocity == 0){
-              tempChange(i, cellArr);
               moveDown(i, belowIndex, cellArr);
               moveRight(i, i + 1, cellArr);
               moveLeft(i, i - 1, cellArr);
             }
             break;
           case LAVA:
-            tempChange(i, cellArr);
             if(updateCounter % cellArr[i].vescocity == 0){
-              if(destroyCell(i, belowIndex, cellArr)) break;
               moveDown(i, belowIndex, cellArr);
               moveRight(i, i + 1, cellArr);
               moveLeft(i, i - 1, cellArr);
@@ -126,6 +103,8 @@ void moveCells(Cell *cellArr){
             break;
           case VOLCANIC_GLASS:
             moveDown(i, belowIndex, cellArr);
+            moveDownRight(i, belowIndex, cellArr);
+            moveDownLeft(i, belowIndex, cellArr);
             break;
           case SMOKE:
             if(aboveIndex >= 0){
@@ -136,8 +115,7 @@ void moveCells(Cell *cellArr){
             }
             break;
           case WATER_VAPOR:
-            tempChange(i, cellArr);
-            if(aboveIndex >= 0 && cellArr[i].type == WATER_VAPOR){ //checks if a temp change happend
+            if(aboveIndex >= 0){
               changeDirectionRandomly(&cellArr[i]);
               moveUp(i, aboveIndex, cellArr);
               moveLeft(i, i - 1, cellArr);
@@ -145,10 +123,8 @@ void moveCells(Cell *cellArr){
             }
             break;
           case WOOD:
-            tempChange(i, cellArr);
             break;
           case STONE:
-            tempChange(i, cellArr);
             break;
           default:
             break;
