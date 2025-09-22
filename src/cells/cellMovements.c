@@ -64,6 +64,7 @@ void replaceCell(int originalIndex, int targetIndex, Cell *cellArr){
   cellArr[targetIndex].element = cellArr[originalIndex].element;
   cellArr[targetIndex].density = cellArr[originalIndex].density;
   cellArr[targetIndex].temp = cellArr[originalIndex].temp;
+  cellArr[targetIndex].vescocity = cellArr[originalIndex].vescocity;
   cellArr[targetIndex].active = true;
   deactivateCell(originalIndex, cellArr);
 }
@@ -76,6 +77,7 @@ void switchCells(int originalIndex, int targetIndex, Cell *cellArr){
   cellArr[targetIndex].element = cellArr[originalIndex].element;
   cellArr[targetIndex].density = cellArr[originalIndex].density;
   cellArr[targetIndex].temp = cellArr[originalIndex].temp;
+  cellArr[targetIndex].vescocity = cellArr[originalIndex].vescocity;
   cellArr[targetIndex].active = cellArr[originalIndex].active;
 
   cellArr[originalIndex].direction = tempCell.direction;
@@ -83,6 +85,7 @@ void switchCells(int originalIndex, int targetIndex, Cell *cellArr){
   cellArr[originalIndex].element = tempCell.element;
   cellArr[originalIndex].density = tempCell.density;
   cellArr[originalIndex].temp = tempCell.temp;
+  cellArr[originalIndex].vescocity = tempCell.vescocity;
   cellArr[originalIndex].active = tempCell.active;
 }
 

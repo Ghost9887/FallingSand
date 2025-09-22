@@ -2,6 +2,7 @@
 
 const float updateTime = 0.001f;
 float updateTimer = 0.0f;
+int updateCounter = 3;
 
 Cell createCell(int x, int y){
   Cell cell;
@@ -12,6 +13,7 @@ Cell createCell(int x, int y){
   cell.isSolid = false; // immovable
   cell.moved = false;
   cell.active = false;
+  cell.vescocity = 1.0f;
   return cell;
 }
 
@@ -53,6 +55,12 @@ void drawCells(Cell *cell){
     case WET_DIRT:
       DrawRectangle(cell->pos.x, cell->pos.y, CELL_SIZE, CELL_SIZE, DARKBROWN);
       break;
+    case WOOD:
+      DrawRectangle(cell->pos.x, cell->pos.y, CELL_SIZE, CELL_SIZE, BEIGE);
+      break;
+    case LAVA:
+      DrawRectangle(cell->pos.x, cell->pos.y, CELL_SIZE, CELL_SIZE, ORANGE); 
+      break;
    default:
       break;
   }
@@ -93,10 +101,19 @@ void moveCells(Cell *cellArr){
             moveDownLeft(i, belowIndex - 1, cellArr);
            break;
           case WATER:
-            tempChange(i, cellArr);
-            moveDown(i, belowIndex, cellArr);
-            moveRight(i, i + 1, cellArr);
-            moveLeft(i, i - 1, cellArr);
+            if(updateCounter % cellArr[i].vescocity == 0){
+              tempChange(i, cellArr);
+              moveDown(i, belowIndex, cellArr);
+              moveRight(i, i + 1, cellArr);
+              moveLeft(i, i - 1, cellArr);
+            }
+            break;
+          case LAVA:
+            if(updateCounter % cellArr[i].vescocity == 0){
+              moveDown(i, belowIndex, cellArr);
+              moveRight(i, i + 1, cellArr);
+              moveLeft(i, i - 1, cellArr);
+            }
             break;
           case SMOKE:
             if(aboveIndex >= 0){
@@ -120,6 +137,10 @@ void moveCells(Cell *cellArr){
         }
       }
     }
+  }
+  updateCounter++;
+  if(updateCounter >= 10){
+    updateCounter = 3;
   }
 }
 

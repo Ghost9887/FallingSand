@@ -29,7 +29,9 @@ typedef enum CellType{
   WATER,
   SMOKE,
   WATER_VAPOR,
-  STONE
+  STONE,
+  WOOD,
+  LAVA
 }CellType;
 
 typedef enum ElementType{
@@ -46,6 +48,7 @@ typedef struct Cell{
   ElementType element; 
   float density;
   float temp;
+  int vescocity;
   bool isSolid;
   bool moved;
   bool active;

@@ -30,6 +30,12 @@ void switchTypes(User *user){
   else if(IsKeyPressed(KEY_SIX)){
     user->equippedType = WATER_VAPOR;
   }
+  else if(IsKeyPressed(KEY_SEVEN)){
+    user->equippedType = WOOD;
+  }
+  else if(IsKeyPressed(KEY_EIGHT)){
+    user->equippedType = LAVA;
+  }
 }
 
 void placeCell(User *user, Cell *cellArr){
@@ -55,6 +61,7 @@ void placeCell(User *user, Cell *cellArr){
               cell->element = LIQUID;
               cell->density = 1.0f;
               cell->temp = worldTemp;
+              cell->vescocity = 1;
               break;
             case STONE:
               cell->isSolid = true;
@@ -77,6 +84,16 @@ void placeCell(User *user, Cell *cellArr){
               cell->density = 1.5f;
               cell->temp = worldTemp;
               break;
+            case WOOD:
+              cell->element = SOLID;
+              cell->density = 1.6f;
+              cell->temp = worldTemp;
+              break;
+            case LAVA:
+              cell->element = LIQUID;
+              cell->density = 2.8f;
+              cell->temp = 200.0f;
+              cell->vescocity = 4;
             default:
               break;
           }

@@ -26,6 +26,12 @@ void drawUI(User *user, int fps){
     case WATER_VAPOR:
       DrawText("Water Vapor", SCREEN_WIDTH - 220, 20, 30,PURPLE);
       break;
+    case WOOD:
+      DrawText("Wood", SCREEN_WIDTH - 120, 20, 30,PURPLE);
+      break;
+    case LAVA:  
+      DrawText("Lava", SCREEN_WIDTH - 120, 20, 30,PURPLE);
+      break;
     default:
       break;
   }
@@ -69,6 +75,12 @@ void drawCellInfo(Cell *cellArr){
       break;
     case WATER_VAPOR:
       DrawText("Type: Water Vapor", 20, 80, 20, PURPLE);
+      break;
+    case WOOD:
+      DrawText("Type: Wood", 20, 80, 20, PURPLE);
+      break;
+    case LAVA:
+      DrawText("Type: Lava", 20, 80, 20, PURPLE);
       break;
     default:
       break;
