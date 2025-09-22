@@ -26,6 +26,7 @@ typedef enum CellType{
   WET_DIRT,
   WATER,
   SMOKE,
+  WATER_VAPOR,
   STONE
 }CellType;
 

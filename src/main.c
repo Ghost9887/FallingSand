@@ -6,6 +6,8 @@
 
 void updateGameState(Cell *cellArr, User *user);
 
+float worldTemp = 23.0f;
+
 int main(){
 
   InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Falling Sand");

@@ -25,6 +25,9 @@ void switchTypes(User *user){
   else if(IsKeyPressed(KEY_FIVE)){
     user->equippedType = DIRT;
   }
+  else if(IsKeyPressed(KEY_SIX)){
+    user->equippedType = WATER_VAPOR;
+  }
 }
 
 void placeCell(User *user, Cell *cellArr){
@@ -55,6 +58,10 @@ void placeCell(User *user, Cell *cellArr){
               cell->density = 3.0f;
               break;
             case SMOKE:
+              cell->element = GAS;
+              cell->density = 0.0f;
+              break;
+            case WATER_VAPOR:
               cell->element = GAS;
               cell->density = 0.0f;
               break;

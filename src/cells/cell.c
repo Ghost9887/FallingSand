@@ -44,6 +44,9 @@ void drawCells(Cell *cell){
     case SMOKE:
       DrawRectangle(cell->pos.x, cell->pos.y, CELL_SIZE, CELL_SIZE, DARKGRAY);
       break;
+    case WATER_VAPOR:
+      DrawRectangle(cell->pos.x, cell->pos.y, CELL_SIZE, CELL_SIZE, SKYBLUE);
+      break;
     case DIRT:
       DrawRectangle(cell->pos.x, cell->pos.y, CELL_SIZE, CELL_SIZE, BROWN);
       break;
@@ -99,8 +102,16 @@ void moveCells(Cell *cellArr){
               moveUp(i, aboveIndex, cellArr);
               moveLeft(i, i - 1, cellArr);
               moveRight(i, i + 1, cellArr);
-              break;
-             }
+            }
+            break;
+          case WATER_VAPOR:
+            if(aboveIndex >= 0){
+              changeDirectionRandomly(&cellArr[i]);
+              moveUp(i, aboveIndex, cellArr);
+              moveLeft(i, i - 1, cellArr);
+              moveRight(i, i + 1, cellArr);
+            }
+            break;
           default:
             break;
         }
