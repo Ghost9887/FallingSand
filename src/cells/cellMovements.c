@@ -2,6 +2,7 @@
 
 //INCLUDES ALL OF THE WAYS DIFFERENT CELLS CAN MOVE AND HELPER FUNCTION AS WELL
 
+extern float worldTemp;
 
 void flipDirection(int originalIndex, int targetIndex, Cell *cellArr){
   if(cellArr[targetIndex].type != EMPTY){
@@ -14,11 +15,35 @@ void switchType(int originalIndex, CellType type, Cell *cellArr){
     case WET_SAND:
       cellArr[originalIndex].type = WET_SAND;
       cellArr[originalIndex].density = 2.0f;
+      cellArr[originalIndex].temp = 2.0f;
       break;
     case WET_DIRT:
       cellArr[originalIndex].type = WET_DIRT;
       cellArr[originalIndex].density = 2.0f;
+      cellArr[originalIndex].temp = 1.0f;
       break;
+    case WATER: 
+      cellArr[originalIndex].type = WATER;
+      cellArr[originalIndex].element = LIQUID;
+      cellArr[originalIndex].density = 1.0f;
+      cellArr[originalIndex].temp = 1;
+      cellArr[originalIndex].direction = (GetRandomValue(1, 2) % 2 == 0) ? -1 : 1;
+      break;
+    case SAND:
+      cellArr[originalIndex].type = SAND;
+      cellArr[originalIndex].density = 1.5f;
+      cellArr[originalIndex].temp = worldTemp;
+      break;
+    case DIRT:
+      cellArr[originalIndex].type = DIRT;
+      cellArr[originalIndex].density = 1.5f;
+      cellArr[originalIndex].temp = worldTemp;
+      break;
+    case WATER_VAPOR:
+      cellArr[originalIndex].element = GAS;
+      cellArr[originalIndex].type = WATER_VAPOR;
+      cellArr[originalIndex].temp = MAX_WATER_TEMP - 1;
+      cellArr[originalIndex].density = 0.0f;
     default:
       break;
   } 
@@ -30,6 +55,7 @@ void deactivateCell(int originalIndex, Cell *cellArr){
   cellArr[originalIndex].element = NOTHING;
   cellArr[originalIndex].density = 0.0f;
   cellArr[originalIndex].active = false;
+  cellArr[originalIndex].temp = 0.0f;
 }
 
 void replaceCell(int originalIndex, int targetIndex, Cell *cellArr){
@@ -37,6 +63,7 @@ void replaceCell(int originalIndex, int targetIndex, Cell *cellArr){
   cellArr[targetIndex].type = cellArr[originalIndex].type;
   cellArr[targetIndex].element = cellArr[originalIndex].element;
   cellArr[targetIndex].density = cellArr[originalIndex].density;
+  cellArr[targetIndex].temp = cellArr[originalIndex].temp;
   cellArr[targetIndex].active = true;
   deactivateCell(originalIndex, cellArr);
 }
@@ -48,12 +75,14 @@ void switchCells(int originalIndex, int targetIndex, Cell *cellArr){
   cellArr[targetIndex].type = cellArr[originalIndex].type;
   cellArr[targetIndex].element = cellArr[originalIndex].element;
   cellArr[targetIndex].density = cellArr[originalIndex].density;
+  cellArr[targetIndex].temp = cellArr[originalIndex].temp;
   cellArr[targetIndex].active = cellArr[originalIndex].active;
 
   cellArr[originalIndex].direction = tempCell.direction;
   cellArr[originalIndex].type = tempCell.type;
   cellArr[originalIndex].element = tempCell.element;
   cellArr[originalIndex].density = tempCell.density;
+  cellArr[originalIndex].temp = tempCell.temp;
   cellArr[originalIndex].active = tempCell.active;
 }
 
@@ -149,10 +178,38 @@ void consume(int originalIndex, int targetIndex, Cell *cellArr){
   }
 }
 
+void tempChange(int originalIndex, Cell *cellArr){
+  if(cellArr[originalIndex].element == GAS){
+    cellArr[originalIndex].temp -= worldTemp / 1000;
+    if(cellArr[originalIndex].type == WATER_VAPOR && cellArr[originalIndex].temp <= 0.0f){
+      switchType(originalIndex, WATER, cellArr);
+    }
+  }
+  else if(cellArr[originalIndex].element == SOLID){
+    if(cellArr[originalIndex].type == WET_SAND){
+      cellArr[originalIndex].temp += worldTemp / 1000;
+      if(cellArr[originalIndex].temp >= MAX_WATER_TEMP){
+        switchType(originalIndex, SAND, cellArr);
+      }
+    }
+    else if(cellArr[originalIndex].type == WET_DIRT){
+      cellArr[originalIndex].temp += worldTemp / 1000;
+      if(cellArr[originalIndex].temp >= MAX_WATER_TEMP){
+        switchType(originalIndex, DIRT, cellArr);
+      }
+    }
+  }
+  else if(cellArr[originalIndex].element == LIQUID){
+    if(cellArr[originalIndex].type == WATER){
+      cellArr[originalIndex].temp += worldTemp / 1000;
+      if(cellArr[originalIndex].temp >= MAX_WATER_TEMP){
+        switchType(originalIndex, WATER_VAPOR, cellArr);
+      }
+    }
+  }
+}
+
 void changeDirectionRandomly(Cell *cell){
   cell->direction = GetRandomValue(-1, 1);
 }
-
-
-
 

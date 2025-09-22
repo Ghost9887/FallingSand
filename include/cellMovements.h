@@ -11,5 +11,6 @@
   void moveUp(int originalIndex, int targetIndex, Cell *cellArr);
   void changeDirectionRandomly(Cell *cell);
   void consume(int originalIndex, int targetIndex, Cell *cellArr);
+  void tempChange(int originalIndex, Cell *cellArr);
 
 #endif

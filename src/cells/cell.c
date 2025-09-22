@@ -67,15 +67,14 @@ void moveCells(Cell *cellArr){
       if(belowIndex < AMOUNT_OF_CELLS){
         switch(cellArr[i].type){
           case SAND:
-            //checks underneath
             consume(i, belowIndex, cellArr);
-            //check above
             consume(i, aboveIndex, cellArr);
             moveDown(i, belowIndex, cellArr);
             moveDownRight(i, belowIndex + 1, cellArr);
             moveDownLeft(i, belowIndex - 1, cellArr);
             break;
           case WET_SAND:
+            tempChange(i, cellArr);
             moveDown(i, belowIndex, cellArr);
             moveDownRight(i, belowIndex + 1, cellArr);
             moveDownLeft(i, belowIndex - 1, cellArr);
@@ -86,12 +85,15 @@ void moveCells(Cell *cellArr){
             moveDown(i, belowIndex, cellArr);
             moveDownRight(i, belowIndex + 1, cellArr);
             moveDownLeft(i, belowIndex - 1, cellArr);
+            break;
           case WET_DIRT:
+            tempChange(i, cellArr);
             moveDown(i, belowIndex, cellArr);
             moveDownRight(i, belowIndex + 1, cellArr);
             moveDownLeft(i, belowIndex - 1, cellArr);
            break;
           case WATER:
+            tempChange(i, cellArr);
             moveDown(i, belowIndex, cellArr);
             moveRight(i, i + 1, cellArr);
             moveLeft(i, i - 1, cellArr);
@@ -105,7 +107,8 @@ void moveCells(Cell *cellArr){
             }
             break;
           case WATER_VAPOR:
-            if(aboveIndex >= 0){
+            tempChange(i, cellArr);
+            if(aboveIndex >= 0 && cellArr[i].type == WATER_VAPOR){ //checks if a temp change happend
               changeDirectionRandomly(&cellArr[i]);
               moveUp(i, aboveIndex, cellArr);
               moveLeft(i, i - 1, cellArr);

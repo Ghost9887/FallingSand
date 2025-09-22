@@ -26,9 +26,8 @@ int main(){
       ClearBackground(BLACK);
 
       updateGameState(cellArr, &user);
-    
-    EndDrawing();
 
+    EndDrawing();
   }
 
   CloseWindow();
@@ -45,5 +44,7 @@ void updateGameState(Cell *cellArr, User *user){
   updateCells(cellArr);
 
   drawUI(user, GetFPS());
+
+  drawCellInfo(cellArr);
 
 }

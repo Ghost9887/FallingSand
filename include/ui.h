@@ -4,5 +4,6 @@
 #include "common.h"
 
   void drawUI(User *user, int fps);
+  void drawCellInfo(Cell *cellArr);
 
 #endif

@@ -1,5 +1,7 @@
 #include "user.h"
 
+extern float worldTemp;
+
 User createUser(){
   User user;
   user.equippedType = SAND;
@@ -47,27 +49,33 @@ void placeCell(User *user, Cell *cellArr){
             case SAND:
               cell->element = SOLID;
               cell->density = 1.5f;
+              cell->temp = worldTemp; 
               break;
             case WATER:
               cell->element = LIQUID;
               cell->density = 1.0f;
+              cell->temp = worldTemp;
               break;
             case STONE:
               cell->isSolid = true;
               cell->element = SOLID;
               cell->density = 3.0f;
+              cell->temp = worldTemp;
               break;
             case SMOKE:
               cell->element = GAS;
               cell->density = 0.0f;
+              cell->temp = worldTemp;
               break;
             case WATER_VAPOR:
               cell->element = GAS;
               cell->density = 0.0f;
+              cell->temp = MAX_WATER_TEMP - 1;
               break;
             case DIRT:
               cell->element = SOLID;
               cell->density = 1.5f;
+              cell->temp = worldTemp;
               break;
             default:
               break;

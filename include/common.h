@@ -18,6 +18,8 @@
 
 #define BRUSH_RADIUS 1
 
+#define MAX_WATER_TEMP 100
+
 typedef enum CellType{
   EMPTY,
   SAND,
@@ -43,6 +45,7 @@ typedef struct Cell{
   CellType type;
   ElementType element; 
   float density;
+  float temp;
   bool isSolid;
   bool moved;
   bool active;
