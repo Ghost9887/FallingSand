@@ -12,7 +12,7 @@ int main(){
 
   InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Falling Sand");
   SetTargetFPS(FPS);
-  //ToggleFullscreen();
+  ToggleFullscreen();
 
   Cell *cellArr = (Cell*)malloc(sizeof(Cell) * AMOUNT_OF_CELLS);
   initCellArr(cellArr);

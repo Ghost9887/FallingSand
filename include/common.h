@@ -7,21 +7,16 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-#define SCREEN_WIDTH 1200 
-#define SCREEN_HEIGHT 800
+#define SCREEN_WIDTH  (GetScreenWidth())
+#define SCREEN_HEIGHT (GetScreenHeight())
 #define FPS 0
 
-#define CELL_SIZE 2 
+#define CELL_SIZE 5
 #define GRID_WIDTH (SCREEN_WIDTH / CELL_SIZE)
 #define GRID_HEIGHT (SCREEN_HEIGHT / CELL_SIZE)
 #define AMOUNT_OF_CELLS (GRID_WIDTH * GRID_HEIGHT)
 
 #define BRUSH_RADIUS 1
-
-#define MAX_WATER_TEMP 100
-#define MELTING_POINT_OF_WOOD 1000 //not accurate
-#define MELTING_POINT_OF_STONE 1300
-#define MELTING_POINT_OF_SAND 1700
 
 typedef enum CellType{
   EMPTY,
