@@ -33,7 +33,7 @@ void createWetSand(Cell *cell){
   cell->type = WET_SAND;
   cell->density = 2.0f;
   cell->temp = worldTemp;
-  cell->isSolid = true;
+  cell->isSolid = false;
   cell->moved = false;
   cell->vescocity = 0;
   cell->direction = (GetRandomValue(1, 2) % 2 == 0) ? -1 : 1;
@@ -55,9 +55,9 @@ void createDirt(Cell *cell){
 void createWetDirt(Cell *cell){
   cell->element = SOLID;
   cell->type = WET_DIRT;
-  cell->density = 1.5f;
+  cell->density = 2.0f;
   cell->temp = worldTemp;
-  cell->isSolid = true;
+  cell->isSolid = false;
   cell->moved = false;
   cell->vescocity = 0;
   cell->direction = (GetRandomValue(1, 2) % 2 == 0) ? -1 : 1;
@@ -112,6 +112,18 @@ void createVolcanicGlass(Cell *cell){
   cell->active = true;
 }
 
+void createBasalt(Cell *cell){
+  cell->element = SOLID;
+  cell->type = BASALT;
+  cell->density = 2.9f;
+  cell->temp = 1000.0f;
+  cell->isSolid = false;
+  cell->moved = false;
+  cell->vescocity = 0.0f;
+  cell->direction = (GetRandomValue(1, 2) % 2 == 0) ? -1 : 1;
+  cell->active = true;
+}
+
 void createWater(Cell *cell){
   cell->element = LIQUID;
   cell->type = WATER;
@@ -128,7 +140,7 @@ void createLava(Cell *cell){
   cell->element = LIQUID;
   cell->type = LAVA;
   cell->density = 1.0f;
-  cell->temp = 1000.0f;
+  cell->temp = 1500.0f;
   cell->isSolid = false;
   cell->moved = false;
   cell->vescocity = 3;

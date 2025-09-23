@@ -16,5 +16,6 @@
   void createVolcanicGlass(Cell *cell);
   void createSmoke(Cell *cell);
   void createWaterVapor(Cell *cell);
+  void createBasalt(Cell *cell);
 
 #endif

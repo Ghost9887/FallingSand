@@ -54,6 +54,9 @@ void drawCells(Cell *cell){
     case VOLCANIC_GLASS:
       DrawRectangle(cell->pos.x, cell->pos.y, CELL_SIZE, CELL_SIZE, PURPLE); 
       break;
+    case BASALT:
+      DrawRectangle(cell->pos.x, cell->pos.y, CELL_SIZE, CELL_SIZE, DARKGRAY); 
+      break;
    default:
       break;
   }
@@ -63,73 +66,95 @@ void drawCells(Cell *cell){
 void moveCells(Cell *cellArr){
   for(int i = AMOUNT_OF_CELLS - 1; i >= 0; i--){
     if(cellArr[i].active && !cellArr[i].moved){
-      int belowIndex = i + GRID_WIDTH; 
-      int aboveIndex = i - GRID_WIDTH;
-      if(belowIndex < AMOUNT_OF_CELLS){
+      int *tiles = malloc(sizeof(int) * 9);
+      tiles[0] = i; //center 0
+      tiles[1] = i + 1; //right 1
+      tiles[2] = i - 1; //left 2
+      tiles[3] = i + GRID_WIDTH; //below 3
+      tiles[4] = i - GRID_WIDTH; //above 4
+      tiles[5] = i + GRID_WIDTH + 1; //belowRight 5
+      tiles[6] = i + GRID_WIDTH - 1; // belowLeft 6
+      tiles[7] = i - GRID_WIDTH + 1; //aboveRight 7 
+      tiles[8] = i - GRID_WIDTH - 1; // aboveLeft 8
+      if(tiles[3] < AMOUNT_OF_CELLS){
         switch(cellArr[i].type){
           case SAND:
-            moveDown(i, belowIndex, cellArr);
-            moveDownRight(i, belowIndex + 1, cellArr);
-            moveDownLeft(i, belowIndex - 1, cellArr);
+            checkNeigbouringTiles(tiles, cellArr);
+            moveDown(tiles[0], tiles[3], cellArr);
+            moveDownRight(tiles[0], tiles[5], cellArr);
+            moveDownLeft(tiles[0], tiles[6], cellArr);
             break;
           case WET_SAND:
-            moveDown(i, belowIndex, cellArr);
-            moveDownRight(i, belowIndex + 1, cellArr);
-            moveDownLeft(i, belowIndex - 1, cellArr);
+            checkNeigbouringTiles(tiles, cellArr);
+            moveDown(tiles[0], tiles[3], cellArr);
+            moveDownRight(tiles[0], tiles[5], cellArr);
+            moveDownLeft(tiles[0], tiles[6], cellArr);
            break;
           case DIRT:
-            moveDown(i, belowIndex, cellArr);
-            moveDownRight(i, belowIndex + 1, cellArr);
-            moveDownLeft(i, belowIndex - 1, cellArr);
+            checkNeigbouringTiles(tiles, cellArr);
+            moveDown(tiles[0], tiles[3], cellArr);
+            moveDownRight(tiles[0], tiles[5], cellArr);
+            moveDownLeft(tiles[0], tiles[6], cellArr);
             break;
           case WET_DIRT:
-            moveDown(i, belowIndex, cellArr);
-            moveDownRight(i, belowIndex + 1, cellArr);
-            moveDownLeft(i, belowIndex - 1, cellArr);
+            checkNeigbouringTiles(tiles, cellArr);
+            moveDown(tiles[0], tiles[3], cellArr);
+            moveDownRight(tiles[0], tiles[5], cellArr);
+            moveDownLeft(tiles[0], tiles[6], cellArr);
            break;
           case WATER:
-            if(updateCounter % cellArr[i].vescocity == 0){
-              moveDown(i, belowIndex, cellArr);
-              moveRight(i, i + 1, cellArr);
-              moveLeft(i, i - 1, cellArr);
+            checkNeigbouringTiles(tiles, cellArr);
+            if(cellArr[tiles[0]].type == WATER && updateCounter % cellArr[tiles[0]].vescocity == 0){
+              moveDown(tiles[0], tiles[3], cellArr);
+              moveRight(tiles[0], tiles[1], cellArr);
+              moveLeft(tiles[0], tiles[2], cellArr);
             }
             break;
           case LAVA:
-            if(updateCounter % cellArr[i].vescocity == 0){
-              moveDown(i, belowIndex, cellArr);
-              moveRight(i, i + 1, cellArr);
-              moveLeft(i, i - 1, cellArr);
+            if(updateCounter % cellArr[tiles[0]].vescocity == 0){
+              moveDown(tiles[0], tiles[3], cellArr);
+              moveRight(tiles[0], tiles[1], cellArr);
+              moveLeft(tiles[0], tiles[2], cellArr);
             }
-            break;
-          case VOLCANIC_GLASS:
-            moveDown(i, belowIndex, cellArr);
-            moveDownRight(i, belowIndex, cellArr);
-            moveDownLeft(i, belowIndex, cellArr);
+            changeTemp(tiles[0], cellArr);
             break;
           case SMOKE:
-            if(aboveIndex >= 0){
-              changeDirectionRandomly(&cellArr[i]);
-              moveUp(i, aboveIndex, cellArr);
-              moveLeft(i, i - 1, cellArr);
-              moveRight(i, i + 1, cellArr);
+            if(tiles[4] >= 0){
+              changeDirectionRandomly(&cellArr[tiles[0]]);
+              moveUp(tiles[0], tiles[4], cellArr);
+              moveLeft(tiles[0], tiles[2], cellArr);
+              moveRight(tiles[0], tiles[1], cellArr);
             }
             break;
           case WATER_VAPOR:
-            if(aboveIndex >= 0){
-              changeDirectionRandomly(&cellArr[i]);
-              moveUp(i, aboveIndex, cellArr);
-              moveLeft(i, i - 1, cellArr);
-              moveRight(i, i + 1, cellArr);
+            if(tiles[4] >= 0){
+              changeDirectionRandomly(&cellArr[tiles[0]]);
+              moveUp(tiles[0], tiles[4], cellArr);
+              moveLeft(tiles[0], tiles[2], cellArr);
+              moveRight(tiles[0], tiles[1], cellArr);
             }
+            changeTemp(tiles[0], cellArr);
+            break;
+          case BASALT:
+            moveDown(tiles[0], tiles[3], cellArr);
+            moveDownRight(tiles[0], tiles[3], cellArr);
+            moveDownLeft(tiles[0], tiles[3], cellArr);
+            changeTemp(tiles[0], cellArr);
+            break;
+          case VOLCANIC_GLASS:
+            changeTemp(tiles[0], cellArr);
             break;
           case WOOD:
+            checkNeigbouringTiles(tiles, cellArr);
             break;
           case STONE:
+            checkNeigbouringTiles(tiles, cellArr);
             break;
           default:
             break;
         }
       }
+      free(tiles);
     }
   }
   updateCounter++;

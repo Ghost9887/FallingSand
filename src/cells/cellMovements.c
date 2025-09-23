@@ -10,58 +10,42 @@ void flipDirection(int originalIndex, int targetIndex, Cell *cellArr){
   }
 }
 
+void changeDirectionRandomly(Cell *cell){
+  cell->direction = GetRandomValue(-1, 1);
+}
+
 void switchType(int originalIndex, CellType type, Cell *cellArr){
   switch(type){
     case WET_SAND:
-      cellArr[originalIndex].type = WET_SAND;
-      cellArr[originalIndex].density = 2.0f;
-      cellArr[originalIndex].temp = 2.0f;
+      createWetSand(&cellArr[originalIndex]);
       break;
     case WET_DIRT:
-      cellArr[originalIndex].type = WET_DIRT;
-      cellArr[originalIndex].density = 2.0f;
-      cellArr[originalIndex].temp = 1.0f;
+      createWetDirt(&cellArr[originalIndex]);
       break;
     case WATER: 
-      cellArr[originalIndex].type = WATER;
-      cellArr[originalIndex].element = LIQUID;
-      cellArr[originalIndex].density = 1.0f;
-      cellArr[originalIndex].temp = 1;
-      cellArr[originalIndex].direction = (GetRandomValue(1, 2) % 2 == 0) ? -1 : 1;
+      createWater(&cellArr[originalIndex]);
       break;
     case SAND:
-      cellArr[originalIndex].type = SAND;
-      cellArr[originalIndex].density = 1.5f;
-      cellArr[originalIndex].temp = worldTemp;
+      createSand(&cellArr[originalIndex]);
       break;
     case DIRT:
-      cellArr[originalIndex].type = DIRT;
-      cellArr[originalIndex].density = 1.5f;
-      cellArr[originalIndex].temp = worldTemp;
+      createDirt(&cellArr[originalIndex]);
       break;
     case WATER_VAPOR:
-      cellArr[originalIndex].element = GAS;
-      cellArr[originalIndex].type = WATER_VAPOR;
-      cellArr[originalIndex].temp = MAX_WATER_TEMP - 1;
-      cellArr[originalIndex].density = 0.0f;
+      createWaterVapor(&cellArr[originalIndex]);
       break;
     case LAVA:
-      cellArr[originalIndex].element = LIQUID;
-      cellArr[originalIndex].type = LAVA;
-      cellArr[originalIndex].temp = 200.0f;
-      cellArr[originalIndex].density = 2.9f;
+      createLava(&cellArr[originalIndex]);
       break;
     case GLASS:
-      cellArr[originalIndex].type = GLASS;
-      cellArr[originalIndex].temp = 23.0f;
-      cellArr[originalIndex].density = 2.8f;
-      cellArr[originalIndex].isSolid = true;
+      createGlass(&cellArr[originalIndex]);
       break;
     case VOLCANIC_GLASS:
-      cellArr[originalIndex].element = SOLID;
-      cellArr[originalIndex].type = VOLCANIC_GLASS;
-      cellArr[originalIndex].temp = 23.0f;
-      cellArr[originalIndex].density = 4.5f;
+      createVolcanicGlass(&cellArr[originalIndex]);
+      break;
+    case BASALT:
+      createBasalt(&cellArr[originalIndex]);
+      break;
     default:
       break;
   } 
@@ -151,10 +135,128 @@ void moveUp(int originalIndex, int targetIndex, Cell *cellArr){
   }
 }
 
+void checkNeigbouringTiles(int *tiles, Cell *cellArr){
+  //RULES THAT DEPEND IF DIFFERENT TYPE OF CELLS ARE NEXT TO EACH OTHER
+  int centerCellType = cellArr[tiles[0]].type;
+  for(int i = 1; i < 9; i++){
+    if(tiles[i] < 0 || tiles[i] >= AMOUNT_OF_CELLS || !cellArr[tiles[i]].active) continue;
+    if(centerCellType == SAND){
+      if(cellArr[tiles[i]].type == WATER){
+        switchType(tiles[0], WET_SAND, cellArr);
+        deactivateCell(tiles[i], cellArr);
+      }
+      if(cellArr[tiles[i]].type == LAVA){
+        cellArr[tiles[0]].temp += cellArr[tiles[i]].temp / 1000; 
+        if(cellArr[tiles[0]].temp >= 1500){
+          switchType(tiles[0], GLASS, cellArr);
+        }
+      }
+    }
 
+    else if(centerCellType == DIRT){
+      if(cellArr[tiles[i]].type == WATER){
+        switchType(tiles[0], WET_DIRT, cellArr);
+        deactivateCell(tiles[i], cellArr);
+      }
+      if(cellArr[tiles[i]].type == LAVA){
+        cellArr[tiles[0]].temp += cellArr[tiles[i]].temp / 1000;
+        if(cellArr[tiles[0]].temp >= 800){
+          switchType(tiles[0], BASALT, cellArr);
+        }
+      }
+    }
 
+    else if(centerCellType == WET_SAND){
+      if(cellArr[tiles[i]].type == LAVA){
+        cellArr[tiles[0]].temp += cellArr[tiles[i]].temp / 1000;
+        if(cellArr[tiles[0]].temp >= worldTemp){
+          switchType(tiles[0], SAND, cellArr);
+        }
+      }
+    }
 
-void changeDirectionRandomly(Cell *cell){
-  cell->direction = GetRandomValue(-1, 1);
+    else if(centerCellType == WET_DIRT){
+      if(cellArr[tiles[i]].type == LAVA){
+        cellArr[tiles[0]].temp += cellArr[tiles[i]].temp / 1000;
+        if(cellArr[tiles[0]].temp >= worldTemp){
+          switchType(tiles[0], DIRT, cellArr);
+        }
+      }
+    }
+
+    else if(centerCellType == WATER){
+      if(cellArr[tiles[i]].type == LAVA){
+        switchType(tiles[0], WATER_VAPOR, cellArr);
+        switchType(tiles[i], VOLCANIC_GLASS, cellArr);
+      }
+      else if(cellArr[tiles[i]].type == BASALT || cellArr[tiles[i]].type == VOLCANIC_GLASS){
+        cellArr[tiles[0]].temp += cellArr[tiles[i]].temp / 1000;
+        if(cellArr[tiles[0]].temp >= 100){
+          switchType(tiles[0], WATER_VAPOR, cellArr);
+        }
+      }
+    }
+
+    else if(centerCellType == STONE){
+      if(cellArr[tiles[i]].type == LAVA){
+        cellArr[tiles[0]].temp += cellArr[tiles[i]].temp / 1000;
+        if(cellArr[tiles[0]].temp >= 1200){
+          switchType(tiles[0], LAVA, cellArr);
+        }
+      }
+    }
+
+    else if(centerCellType == WOOD){
+      if(cellArr[tiles[i]].type == LAVA){
+        cellArr[tiles[0]].temp += cellArr[tiles[i]].temp / 1000;
+        if(cellArr[tiles[0]].temp >= 400){
+          switchType(tiles[0], LAVA, cellArr);
+        }
+      }
+    }
+  }
 }
+
+//cells that change thier temp always not when something is near them
+void changeTemp(int originalIndex, Cell *cellArr){
+  switch(cellArr[originalIndex].type){
+    case WATER_VAPOR:
+      cellArr[originalIndex].temp -= worldTemp / 100;
+      if(cellArr[originalIndex].temp <= 0){
+        switchType(originalIndex, WATER ,cellArr);
+      }
+      break;
+    case LAVA:
+      cellArr[originalIndex].temp -= worldTemp / 100;
+      if(cellArr[originalIndex].temp <= 1000){
+        switchType(originalIndex, BASALT, cellArr);
+      }
+    break;
+    case WET_SAND:
+      cellArr[originalIndex].temp += worldTemp / 100;
+      if(cellArr[originalIndex].temp >= worldTemp){
+        switchType(originalIndex, SAND, cellArr);
+      }
+      break;
+    case WET_DIRT:
+      cellArr[originalIndex].temp += worldTemp / 100;
+      if(cellArr[originalIndex].temp >= worldTemp){
+        switchType(originalIndex, DIRT, cellArr);
+      }
+      break;
+    case VOLCANIC_GLASS:
+      if(cellArr[originalIndex].temp > worldTemp){
+        cellArr[originalIndex].temp -= worldTemp / 100;
+      }
+      break;
+    case BASALT:
+      if(cellArr[originalIndex].temp > worldTemp){
+        cellArr[originalIndex].temp -= worldTemp / 100;
+      }
+      break;
+    default:
+      break;
+  }
+}
+
 

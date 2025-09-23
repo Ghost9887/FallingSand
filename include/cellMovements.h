@@ -11,5 +11,7 @@
   void moveLeft(int originalIndex, int targetIndex, Cell *cellArr);
   void moveUp(int originalIndex, int targetIndex, Cell *cellArr);
   void changeDirectionRandomly(Cell *cell);
+  void changeTemp(int originalIndex, Cell *cellArr);
+  void checkNeigbouringTiles(int *tiles, Cell *cellArr);
 
 #endif

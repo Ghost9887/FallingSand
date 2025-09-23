@@ -36,7 +36,8 @@ typedef enum CellType{
   WATER_VAPOR,
   STONE,
   WOOD,
-  LAVA
+  LAVA,
+  BASALT
 }CellType;
 
 typedef enum ElementType{
