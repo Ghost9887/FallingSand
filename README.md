@@ -8,7 +8,7 @@ Tiles:
   Dirt,
   Water,
   Lava,
-  Water_Vapour,
+  Water_Vapor,
   Smoke,
   Glass,
   Volcanic Glass,
@@ -19,7 +19,7 @@ Tiles:
 Interaction:
   Sand + Water -> Wet_Sand,
   Dirt + Water -> Wet_Dirt,
-  Water_Vapour -> Water,
+  Water_Vapor -> Water,
   Lava + Sand -> Glass,
-  Lava + Water -> Volcanic_Glass and Water_Vapour,
+  Lava + Water -> Volcanic_Glass and Water_Vapor,
   Lava + Dirt -> Basalt
