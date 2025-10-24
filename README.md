@@ -1,6 +1,7 @@
 <img width="1913" height="1078" alt="obrázok" src="https://github.com/user-attachments/assets/85b1212c-116f-404e-8656-a620afd37445" />
 
 Falling Sand Simulation Written in C using Raylib
+
 Tiles:
   Sand,
   Wet_Sand,
